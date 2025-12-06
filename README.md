@@ -66,124 +66,7 @@ EventPro provides a comprehensive solution for event service providers to manage
 - **Google Cloud Storage** (optional for basic testing)
 - **Google OAuth credentials** (optional, only for "Sign in with Google")
 
-### Quick Start
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/eventpro.git
-   cd eventpro
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up PostgreSQL database**
-
-   **Option A: Local PostgreSQL Installation**
-   
-   Install PostgreSQL on your system:
-   - **macOS**: `brew install postgresql@15 && brew services start postgresql@15`
-   - **Ubuntu/Debian**: `sudo apt-get install postgresql postgresql-contrib`
-   - **Windows**: [Download installer](https://www.postgresql.org/download/windows/)
-   
-   Create a database:
-   ```bash
-   # Connect to PostgreSQL
-   psql postgres
-   
-   # Create database and user
-   CREATE DATABASE eventpro;
-   CREATE USER eventpro_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE eventpro TO eventpro_user;
-   \q
-   ```
-
-   **Option B: Free Cloud Database**
-   
-   Use a free hosted PostgreSQL database:
-   - [Neon](https://neon.tech) - Free tier available
-   - [Supabase](https://supabase.com) - Free tier available
-   - [Railway](https://railway.app) - Free tier available
-
-4. **Set up environment variables**
-   
-   Copy the example file and update with your values:
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` file with your database credentials:
-   
-   ```env
-   # For local PostgreSQL:
-   DATABASE_URL=postgresql://eventpro_user:your_password@localhost:5432/eventpro
-   PGHOST=localhost
-   PGPORT=5432
-   PGUSER=eventpro_user
-   PGPASSWORD=your_password
-   PGDATABASE=eventpro
-   
-   # Generate a random session secret:
-   SESSION_SECRET=your-random-secret-here
-   ```
-   
-   **Generate a secure session secret:**
-   ```bash
-   # On Linux/macOS:
-   openssl rand -base64 32
-   
-   # On Windows (PowerShell):
-   [Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 }))
-   ```
-   
-   **Optional: Google OAuth** (skip if you don't need "Sign in with Google")
-   
-   1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-   2. Create OAuth 2.0 credentials
-   3. Add authorized redirect URI: `http://localhost:5000/auth/google/callback`
-   4. Add credentials to `.env`:
-      ```env
-      GOOGLE_CLIENT_ID=your-client-id
-      GOOGLE_CLIENT_SECRET=your-client-secret
-      ```
-
-5. **Initialize the database**
-   
-   This will create all necessary tables:
-   ```bash
-   npm run db:push
-   ```
-
-6. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-The application will be available at `http://localhost:5000`
-
-### First-Time Setup
-
-After starting the application:
-1. Go to `http://localhost:5000`
-2. Click "Sign Up" and create a provider account
-3. Complete your business profile
-4. You're ready to start managing events!
-
-### Troubleshooting
-
-**Database connection errors:**
-- Verify PostgreSQL is running: `pg_isready`
-- Check your `DATABASE_URL` in `.env`
-- Ensure the database exists: `psql -l`
-
-**Port already in use:**
-- Change the `PORT` in `.env` to a different value (e.g., 3000)
-
-**Build errors:**
-- Clear node_modules: `rm -rf node_modules && npm install`
-- Clear Vite cache: `rm -rf .vite`
 
 ## Project Structure
 
@@ -193,7 +76,7 @@ After starting the application:
 │   │   ├── components/    # Reusable UI components
 │   │   ├── pages/         # Page components
 │   │   ├── lib/           # Utility functions and query client
-│   │   └── hooks/         # Custom React hooks
+│   │   └── hook/         # Custom React hooks
 ├── server/                # Backend Express application
 │   ├── routes.ts          # API route definitions
 │   ├── storage.ts         # Database access layer
@@ -203,42 +86,6 @@ After starting the application:
 └── db/                    # Database migrations and config
 ```
 
-## Database Schema
-
-The platform includes the following core tables:
-- **users**: User authentication and roles
-- **providers**: Provider business information
-- **clients**: Client profile information
-- **services**: Service catalog
-- **client_events**: Event bookings
-- **client_quotes**: Quote management
-- **quote_line_items**: Detailed quote breakdowns
-- **discount_coupons**: Coupon management system
-
-## Scripts
-
-- `npm run dev` - Start development server (frontend + backend)
-- `npm run build` - Build for production
-- `npm run db:push` - Sync database schema
-- `npm run db:studio` - Open Drizzle Studio for database management
-
-## Authentication
-
-EventPro supports multiple authentication methods:
-- Email/password with secure password hashing (bcrypt)
-- Google OAuth 2.0
-- HTTP-only secure cookies with CSRF protection
-- Password strength validation
-- Forgot password functionality
-
-## Security Features
-
-- Role-based access control (RBAC)
-- Secure session management with PostgreSQL store
-- Password strength validation
-- HTTP-only cookies with CSRF protection
-- Environment-based secret management
-- SQL injection prevention through Drizzle ORM
 
 ## Contributing
 
